@@ -31,7 +31,7 @@ import org.apache.ofbiz.entity.util.EntityQuery;
 
 public class Various {
 
-    public static final String MODULE = Various.class.getName();
+    private static final String MODULE = Various.class.getName();
 
     public static void setDatesFollowingTasks(GenericValue task) {
 
@@ -42,7 +42,8 @@ public class Various {
                     GenericValue nextTask = assoc.getRelatedOne("ToWorkEffort", false);
                     Timestamp newStartDate = task.getTimestamp("estimatedCompletionDate"); // start of next task the next day
                     if (nextTask.get("estimatedStartDate") == null || nextTask.getTimestamp("estimatedStartDate").before(newStartDate)) {
-                        nextTask.put("estimatedStartDate", UtilDateTime.addDaysToTimestamp(task.getTimestamp("estimatedCompletionDate"), 1)); // start of next task the next day
+                        nextTask.put("estimatedStartDate", UtilDateTime.addDaysToTimestamp(task.getTimestamp("estimatedCompletionDate"), 1));
+                        // start of next task the next day
                         nextTask.put("estimatedCompletionDate", calculateCompletionDate(nextTask, task.getTimestamp("estimatedCompletionDate")));
                         nextTask.store();
                     }

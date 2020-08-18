@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
 public class EbayHelper {
     private static final String configFileName = "ebayExport.properties";
     private static final String MODULE = EbayHelper.class.getName();
-    public static final String resource = "EbayUiLabels";
+    private static final String RESOURCE = "EbayUiLabels";
 
     public static Map<String, Object> buildEbayConfig(Map<String, Object> context, Delegator delegator) {
         Map<String, Object> buildEbayConfigContext = new HashMap<>();
@@ -71,7 +71,7 @@ public class EbayHelper {
             try {
                 eBayConfig = EntityQuery.use(delegator).from("EbayConfig").where(UtilMisc.toMap("productStoreId", productStoreId)).queryOne();
             } catch (GenericEntityException e) {
-                String errMsg = UtilProperties.getMessage(resource, "buildEbayConfig.unableToFindEbayConfig" + e.getMessage(), locale);
+                String errMsg = UtilProperties.getMessage(RESOURCE, "buildEbayConfig.unableToFindEbayConfig" + e.getMessage(), locale);
                 return ServiceUtil.returnError(errMsg);
             }
             if (eBayConfig != null) {
@@ -220,12 +220,9 @@ public class EbayHelper {
                             return false;
                     }
                 }
-            } 
+            }
         } catch (GenericEntityException gee) {
             Debug.logError(gee, "Cannot get payment preferences for order #" + orderId, MODULE);
-            return false;
-        } catch (Exception e) {
-            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, MODULE);
             return false;
         }
         return true;
@@ -262,10 +259,7 @@ public class EbayHelper {
                 return false;
             }
             return true;
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
-            return false;
-        } catch (GenericServiceException e) {
+        } catch (GenericEntityException | GenericServiceException e) {
             Debug.logError(e, "Failed to create the payment for order " + orderId, MODULE);
             return false;
         }
@@ -301,7 +295,9 @@ public class EbayHelper {
 
         try {
             if (UtilValidate.isNotEmpty(name) && userLogin != null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Creating Customer Party: " + name, MODULE);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Creating Customer Party: " + name, MODULE);
+                }
 
                 // Try to split the lastname from the firstname
                 String firstName = "";
@@ -323,11 +319,11 @@ public class EbayHelper {
                     return null;
                 }
                 partyId = (String) summaryResult.get("partyId");
-                if (Debug.verboseOn()) Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Created Customer Party: " + partyId, MODULE);
+                }
             }
         } catch (GenericServiceException e) {
-            Debug.logError(e, "Failed to createPerson", MODULE);
-        } catch (Exception e) {
             Debug.logError(e, "Failed to createPerson", MODULE);
         }
         return partyId;

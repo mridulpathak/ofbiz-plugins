@@ -40,7 +40,7 @@ import org.apache.ofbiz.webpos.transaction.WebPosTransaction;
 
 public class WebPosSession {
 
-    public static final String MODULE = WebPosSession.class.getName();
+    private static final String MODULE = WebPosSession.class.getName();
 
     private String id = null;
     private Map<String, Object> attributes = new HashMap<>();
@@ -81,7 +81,7 @@ public class WebPosSession {
     public GenericValue getUserLogin() {
         return this.userLogin;
     }
-    
+
     public void setUserLogin(GenericValue userLogin) {
         this.userLogin = userLogin;
     }
